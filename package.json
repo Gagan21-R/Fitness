@@ -1,0 +1,20 @@
+{
+  "name": "fitness-consistency",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal exercise consistency tracker (React, Node.js + Express, MongoDB)",
+  "workspaces": ["server", "client"],
+  "scripts": {
+    "dev": "concurrently -n api,web -c cyan,green \"npm run dev -w server\" \"npm run dev -w client\"",
+    "build": "npm run build -w client",
+    "start": "npm start -w server",
+    "test": "npm test -w server",
+    "seed": "npm run seed -w server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

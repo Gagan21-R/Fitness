@@ -1,0 +1,146 @@
+/* =========================================================
+   Feature styles: live timer, planner, ghost race, records, feelings.
+   Same maximalist language as styles.css.
+   ========================================================= */
+
+.sidebar .sidebar-timer { background: var(--surface); color: var(--on-pop); border-color: var(--on-pop); box-shadow: 4px 4px 0 var(--on-pop); }
+:root[data-theme='dark'] .sidebar .sidebar-timer { background: var(--pop-yellow); }
+
+/* ---------- Live timer: a sticker docked at the bottom of the screen ---------- */
+.timer-pill {
+  position: fixed; left: 50%; bottom: 22px; z-index: 40; transform: translateX(-50%) rotate(-1deg);
+  display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 10px;
+  border: 3px solid var(--on-pop); border-radius: 999px; background: var(--pop-lime); color: var(--on-pop);
+  box-shadow: 6px 6px 0 var(--on-pop); max-width: calc(100vw - 24px);
+}
+.timer-pill.is-paused { background: var(--pop-yellow); }
+.timer-pill .icon-btn { color: var(--on-pop); }
+.timer-icon {
+  display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%;
+  border: 2.5px solid var(--on-pop); background: var(--surface); color: var(--ink);
+  animation: timer-pulse 1.6s ease-in-out infinite;
+}
+.timer-pill.is-paused .timer-icon { animation: none; }
+.timer-main { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; }
+.timer-label { font-family: 'Space Mono', monospace; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.timer-clock { font-family: 'Bricolage Grotesque Variable', sans-serif; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+.timer-stop {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 38px; padding: 0 14px; border-radius: 999px;
+  border: 2.5px solid var(--on-pop); background: var(--on-pop); color: var(--pop-lime);
+  font-weight: 800; cursor: pointer; white-space: nowrap;
+}
+.timer-stop:hover { background: var(--surface); color: var(--ink); }
+@keyframes timer-pulse { 50% { transform: scale(1.12); } }
+
+/* ---------- Feeling rating in the workout form ---------- */
+.feelings .segment { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.feelings .segment.is-selected { background: var(--pop-teal); }
+
+/* ---------- Planner ---------- */
+.plan-summary { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; background: var(--pop-sky); color: var(--on-pop); }
+.plan-summary-figures { display: flex; gap: 22px; }
+.plan-summary-figures div { display: flex; flex-direction: column; }
+.plan-summary-figures strong { font-family: 'Bricolage Grotesque Variable', sans-serif; font-size: 2.4rem; line-height: 1; font-weight: 800; }
+.plan-summary-figures span { font-family: 'Space Mono', monospace; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
+.plan-summary-bar { flex: 1 1 240px; display: flex; flex-direction: column; gap: 6px; font-weight: 600; }
+
+.plan-board { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 14px; align-items: start; }
+.plan-day { display: flex; flex-direction: column; gap: 10px; padding: 14px; min-height: 200px; box-shadow: 4px 4px 0 var(--shadow-color); }
+.plan-day.is-today { background: var(--pop-yellow); color: var(--on-pop); transform: rotate(-1deg); }
+.plan-day.is-today .muted { color: var(--on-pop); opacity: 0.75; }
+.plan-day.is-past { opacity: 0.75; }
+.plan-day-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; }
+.plan-day-head h2 { font-size: 1.2rem; }
+.plan-today {
+  padding: 1px 8px; border: 2px solid var(--on-pop); border-radius: 999px; background: var(--on-pop); color: var(--pop-yellow);
+  font-family: 'Space Mono', monospace; font-size: 0.64rem; font-weight: 700; text-transform: uppercase;
+}
+.plan-items { display: flex; flex-direction: column; gap: 8px; }
+.plan-item { display: flex; gap: 8px; align-items: flex-start; padding: 8px; border: 2px solid var(--line-strong); border-radius: 12px; background: var(--surface); color: var(--ink); }
+.plan-item .activity-icon { width: 30px; height: 30px; border-radius: 9px; }
+.plan-item-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow-wrap: anywhere; }
+.plan-item-main strong { font-size: 0.88rem; font-weight: 800; }
+.plan-item-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.plan-item-actions .icon-btn { width: 30px; height: 30px; }
+.plan-done { background: var(--pop-lime); color: var(--on-pop); }
+.plan-done .muted { color: var(--on-pop); opacity: 0.75; }
+.plan-missed { border-style: dashed; opacity: 0.8; }
+.plan-status {
+  display: inline-flex; align-items: center; gap: 4px; align-self: flex-start; padding: 0 7px;
+  border: 2px solid currentColor; border-radius: 999px;
+  font-family: 'Space Mono', monospace; font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+}
+.plan-status-done { color: var(--on-pop); }
+.plan-status-missed { color: var(--bad); }
+.plan-status-planned { color: var(--ink-2); }
+.plan-log { min-height: 28px; padding: 0 10px; font-size: 0.74rem; background: var(--pop-lilac); color: var(--on-pop); }
+.plan-empty { flex: 1; }
+.plan-add {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-height: 34px; margin-top: auto;
+  border: 2px dashed var(--line-strong); border-radius: 10px; background: transparent; color: inherit; font-weight: 800; cursor: pointer;
+}
+.plan-day.is-today .plan-add { border-color: var(--on-pop); }
+.plan-add:hover { border-style: solid; background: var(--pop-lilac); color: var(--on-pop); }
+.plan-foot { display: flex; align-items: center; gap: 6px; }
+
+/* In the board, a session card stacks: icon and name on top, actions along the bottom. */
+.plan-board .plan-item { flex-wrap: wrap; }
+.plan-board .plan-item-main { flex-basis: calc(100% - 40px); }
+.plan-board .plan-item-actions { flex-direction: row; justify-content: space-between; align-items: center; width: 100%; }
+.plan-board .plan-item-actions:only-child, .plan-board .plan-item-actions .icon-btn:only-child { margin-left: auto; }
+
+/* ---------- Ghost race and today's plan ---------- */
+.ghost-card, .today-card { height: 100%; }
+.ghost-headline { font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(1.35rem, 2.4vw, 1.75rem); line-height: 1.2; margin-bottom: 8px; }
+.ghost-legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.8rem; font-weight: 600; color: var(--ink-2); }
+.ghost-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.ghost-swatch { display: inline-block; width: 22px; height: 0; border-top: 3px solid var(--accent-strong); }
+.ghost-swatch-ghost { border-top: 2px dashed var(--ink-2); }
+.today-card { display: flex; flex-direction: column; }
+.today-card .plan-items { margin-bottom: 4px; }
+.today-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: auto; padding-top: 16px; }
+
+/* ---------- Personal records ---------- */
+.records { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+.record { display: flex; flex-direction: column; gap: 4px; padding: 18px; color: var(--on-pop); }
+.records > .record:nth-child(4n + 1) { background: var(--pop-lime); transform: rotate(-1deg); }
+.records > .record:nth-child(4n + 2) { background: var(--pop-lilac); transform: rotate(1deg); }
+.records > .record:nth-child(4n + 3) { background: var(--pop-teal); transform: rotate(-0.5deg); }
+.records > .record:nth-child(4n + 4) { background: var(--pop-yellow); transform: rotate(0.8deg); }
+.record .muted { color: var(--on-pop); opacity: 0.75; }
+.record-icon { display: grid; place-items: center; width: 40px; height: 40px; margin-bottom: 6px; border-radius: 50%; border: 2.5px solid var(--on-pop); background: var(--surface); color: var(--ink); }
+.record-title { font-family: 'Space Mono', monospace; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
+.record-value { font-family: 'Bricolage Grotesque Variable', sans-serif; font-size: 2.2rem; line-height: 1.05; font-weight: 800; letter-spacing: -0.03em; }
+
+/* ---------- Feelings ---------- */
+.feelings-card { display: flex; flex-direction: column; gap: 18px; }
+.feelings-overall {
+  display: flex; align-items: center; gap: 14px; align-self: flex-start; padding: 14px;
+  border: 2.5px solid var(--on-pop); border-radius: 14px; background: var(--pop-teal); color: var(--on-pop);
+}
+.feelings-overall .muted { color: var(--on-pop); opacity: 0.75; }
+.feelings-overall strong { display: block; font-size: 1.15rem; font-weight: 800; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1560px) {
+  .plan-board { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 1100px) {
+  .plan-board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 860px) {
+  .tabbar { grid-template-columns: repeat(6, 1fr); }
+  .timer-pill { bottom: 160px; }
+}
+@media (max-width: 720px) {
+  .plan-board { grid-template-columns: minmax(0, 1fr); }
+  .plan-day { min-height: 0; }
+  .timer-clock { font-size: 1.2rem; }
+  .timer-stop { padding: 0 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .timer-icon { animation: none; }
+}
+@media print {
+  .timer-pill { display: none !important; }
+}

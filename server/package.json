@@ -1,0 +1,31 @@
+{
+  "name": "fitness-consistency-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "cross-env PORT=5000 node --watch-path=src src/index.js",
+    "start": "cross-env NODE_ENV=production node src/index.js",
+    "seed": "node src/seed/run.js",
+    "test": "cross-env NODE_ENV=test node --test --test-concurrency=1 \"test/*.test.js\""
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "compression": "^1.8.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb-memory-server": "^10.1.4",
+    "mongoose": "^8.13.2",
+    "morgan": "^1.10.0",
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "supertest": "^7.1.0"
+  }
+}
