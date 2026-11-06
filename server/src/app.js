@@ -22,6 +22,9 @@ const clientDist = path.resolve(here, '../../client/dist');
 export function createApp() {
   const app = express();
 
+  // Requests arrive through one proxy (Vite locally, Netlify or another host in production),
+  // so the visitor's real IP is in X-Forwarded-For. Rate limiting needs it.
+  app.set('trust proxy', 1);
   app.use(helmet());
   app.use(cors({ origin: config.clientOrigin }));
   app.use(compression());

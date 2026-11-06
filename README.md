@@ -23,7 +23,7 @@ Open <http://localhost:5173>. Signed-out visitors see the landing page; choose *
 | Command | What it does |
 | --- | --- |
 | `npm run dev` | Starts the API (port 5000) and the React dev server (port 5173) |
-| `npm test` | Runs the 37 API and statistics tests |
+| `npm test` | Runs the 40 API, statistics and Netlify function tests |
 | `npm run build` | Builds the React app into `client/dist` |
 | `npm start` | Serves the API and the built app together on port 5000. Set `JWT_SECRET` first |
 | `npm run seed` | Rebuilds the demo account. Stop the dev server first |
@@ -31,6 +31,25 @@ Open <http://localhost:5173>. Signed-out visitors see the landing page; choose *
 To use your own MongoDB or Atlas, copy `server/.env.example` to `server/.env` and set `MONGO_URI`.
 
 The built-in database keeps its data in `~/.fitness-consistency`, outside the project folder, because Windows can't start MongoDB from a deeply nested folder.
+
+## Deploy to Netlify
+
+Netlify serves the React pages as static files and runs the Express API as a Netlify Function (`netlify/functions/api.mjs`). `netlify.toml` holds the build command, the publish folder and the routing, so nothing needs setting by hand in Netlify's build settings.
+
+The built-in database doesn't work on Netlify, so the app needs a MongoDB Atlas database:
+
+1. Create a free cluster at [mongodb.com/atlas](https://www.mongodb.com/atlas). Under **Database Access**, add a database user. Under **Network Access**, allow `0.0.0.0/0`, because Netlify Functions don't have fixed IP addresses.
+2. Copy the connection string from **Connect → Drivers**. It looks like `mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/`.
+3. In Netlify, open **Site configuration → Environment variables** and add:
+
+   | Key | Value |
+   | --- | --- |
+   | `MONGO_URI` | The Atlas connection string |
+   | `JWT_SECRET` | Any long random text, for example the output of `node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"` |
+
+4. Go to **Deploys → Trigger deploy → Deploy site**, so the function picks up the new variables.
+
+After that, every `git push` to `main` redeploys the site automatically. To check the API, open `https://YOUR-SITE.netlify.app/api/health`, which should show `{"status":"ok","db":"connected"}`.
 
 ## How the brief is met
 

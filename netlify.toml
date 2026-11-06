@@ -1,0 +1,30 @@
+# Netlify deploys the whole app: the React pages as static files and the Express API as a function.
+# Settings here override the build settings in the Netlify dashboard.
+
+[build]
+  command = "npm run build"
+  publish = "client/dist"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # The built-in MongoDB is only for local development; don't download it during the build.
+  MONGOMS_DISABLE_POSTINSTALL = "1"
+
+[functions]
+  node_bundler = "esbuild"
+  # Ship these as normal packages instead of bundling them (they load optional parts at runtime).
+  external_node_modules = ["mongoose", "mongodb", "express"]
+
+# Send API calls to the function.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
+
+# Single-page app: any other path loads index.html, so /login or /plan work on refresh.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
