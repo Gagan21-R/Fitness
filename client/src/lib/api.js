@@ -36,27 +36,49 @@ function toQuery(params) {
   return clean.length ? `?${new URLSearchParams(clean)}` : '';
 }
 
+const RETRIES = 4;
+const RETRY_DELAY_MS = 1500;
+const UNREACHABLE = 'The server is not responding. It may be restarting, so wait a few seconds and try again. If this keeps happening, check that "npm run dev" is still running.';
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Fetches, retrying while the API can't be reached at all. That happens for a few seconds
+ * whenever the dev server restarts. Such a request never reached the API, so retrying it
+ * can't apply anything twice.
+ */
+async function fetchWithRetry(url, options) {
+  for (let attempt = 0; ; attempt += 1) {
+    let res = null;
+    let data = null;
+    try {
+      res = await fetch(url, options);
+    } catch {
+      // Network error: the request didn't get through.
+    }
+    if (res && res.status !== 204) data = await res.clone().json().catch(() => null);
+    // A 5xx without our error body (or the dev proxy's SERVER_UNAVAILABLE) means the API wasn't reached.
+    const unreachable =
+      !res || data?.error?.code === 'SERVER_UNAVAILABLE' || (res.status >= 500 && !data?.error);
+    if (!unreachable) return { res, data };
+    if (attempt >= RETRIES) throw new ApiError(UNREACHABLE, { status: res?.status ?? 0, code: 'SERVER_UNAVAILABLE' });
+    await wait(RETRY_DELAY_MS);
+  }
+}
+
 async function send(path, { method = 'GET', body, params, raw = false } = {}) {
   const headers = {};
   const token = getToken();
   if (token) headers.Authorization = `Bearer ${token}`;
   if (body !== undefined) headers['Content-Type'] = 'application/json';
 
-  let res;
-  try {
-    res = await fetch(`/api${path}${toQuery(params)}`, {
-      method,
-      headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
-    });
-  } catch {
-    throw new ApiError('Could not reach the server. Check that it is running.', { status: 0, code: 'NETWORK' });
-  }
+  const { res, data } = await fetchWithRetry(`/api${path}${toQuery(params)}`, {
+    method,
+    headers,
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
 
   if (res.ok && raw) return res;
   if (res.status === 204) return null;
-
-  const data = await res.json().catch(() => null);
   if (res.ok) return data;
 
   const err = data?.error || {};
