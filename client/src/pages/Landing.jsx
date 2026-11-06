@@ -600,7 +600,7 @@ function Team() {
           </div>
           <div>
             <span className="lp-eyebrow">Developer</span>
-            <h3>Gagan Renuka</h3>
+            <h3>Gagan R</h3>
             <p>
               Designed and built FitnessConsistency end to end: the React interface, the Express API, the MongoDB data
               model and the test suite.
@@ -764,7 +764,7 @@ function Footer({ onDemo, busy }) {
       </motion.div>
       <div className="lp-footer-bar">
         <Logo />
-        <span>A CIA project by Gagan Renuka · React, Express, MongoDB</span>
+        <span>A CIA project by Gagan R · React, Express, MongoDB</span>
         <a href="#top">Back to top ↑</a>
       </div>
     </footer>

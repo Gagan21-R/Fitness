@@ -4,7 +4,7 @@ A personal exercise consistency tracker. Log workouts by hand, set weekly target
 
 **Stack:** React, Node.js + Express REST API, MongoDB
 
-**Student:** Gagan Renuka (2102508569)
+**Student:** Gagan R (2102508569)
 
 ## Run it
 
