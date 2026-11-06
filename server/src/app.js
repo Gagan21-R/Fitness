@@ -16,8 +16,10 @@ import planRoutes from './routes/plans.js';
 import statsRoutes from './routes/stats.js';
 import workoutRoutes from './routes/workouts.js';
 
-const here = path.dirname(fileURLToPath(import.meta.url));
-const clientDist = path.resolve(here, '../../client/dist');
+// import.meta.url is empty when Netlify bundles this file as CommonJS. There the pages are
+// served by Netlify itself, so no client folder is needed.
+const here = import.meta.url ? path.dirname(fileURLToPath(import.meta.url)) : null;
+const clientDist = here ? path.resolve(here, '../../client/dist') : null;
 
 export function createApp() {
   const app = express();
@@ -43,7 +45,7 @@ export function createApp() {
   app.use('/api', notFound);
 
   // In production, Express also serves the built React app.
-  if (fs.existsSync(clientDist)) {
+  if (clientDist && fs.existsSync(clientDist)) {
     app.use(express.static(clientDist));
     app.get(/^\/(?!api).*/, (_req, res) => res.sendFile(path.join(clientDist, 'index.html')));
   }

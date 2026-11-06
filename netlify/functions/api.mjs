@@ -134,6 +134,15 @@ export async function handler(event, context) {
         message: 'The server is missing JWT_SECRET. Set it in Netlify, then redeploy.',
       });
     }
+    if (!err.isDbError) {
+      // The app itself failed to start, before any database connection was tried.
+      console.error('API failed to start:', err);
+      return json(500, {
+        code: 'SERVER_START_FAILED',
+        message: 'The API failed to start. The Netlify function log has the details.',
+        detail: `${err?.name || 'Error'}: ${String(err?.message || '').slice(0, 300)}`,
+      });
+    }
     console.error('Database connection failed:', err?.name, err?.message);
     const { code, message } = classifyDbError(err);
     return json(503, { code, message, connectionString: describeMongoUri(process.env.MONGO_URI || '') });
